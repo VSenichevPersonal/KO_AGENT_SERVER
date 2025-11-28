@@ -13,8 +13,30 @@ export PATH="/usr/sbin:/sbin:${PATH}"
 APP_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "${APP_ROOT}"
 
-PHP_FPM_BIN="${PHP_FPM_BIN:-php-fpm}"
-NGINX_BIN="${NGINX_BIN:-nginx}"
+resolve_bin() {
+  local primary="$1"
+  shift
+  if command -v "${primary}" >/dev/null 2>&1; then
+    printf '%s\n' "${primary}"
+    return 0
+  fi
+  for candidate in "$@"; do
+    if command -v "${candidate}" >/dev/null 2>&1; then
+      printf '%s\n' "${candidate}"
+      return 0
+    fi
+  done
+  return 1
+}
+
+: "${PHP_FPM_BIN:=$(resolve_bin php-fpm php-fpm8.3 php-fpm8.2 php-fpm8.1 php-fpm8.0)}" || {
+  echo "[run-stack] Не удалось найти php-fpm бинарь" >&2
+  exit 1
+}
+: "${NGINX_BIN:=$(resolve_bin nginx)}" || {
+  echo "[run-stack] Не удалось найти nginx бинарь" >&2
+  exit 1
+}
 NGINX_GLOBAL_DIRECTIVES="${NGINX_GLOBAL_DIRECTIVES:-daemon off;}"
 read -r -a PHP_FPM_ARGS <<< "${PHP_FPM_FLAGS:--F}"
 
