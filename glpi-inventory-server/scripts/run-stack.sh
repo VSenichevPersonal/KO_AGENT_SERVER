@@ -6,6 +6,10 @@
 
 set -euo pipefail
 
+# INTENT: Railway runtime запускается под непривилегированным пользователем,
+# у которого по умолчанию нет /usr/sbin в PATH. Добавляем системные пути явно.
+export PATH="/usr/sbin:/sbin:${PATH}"
+
 APP_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "${APP_ROOT}"
 
