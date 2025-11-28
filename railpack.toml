@@ -1,0 +1,5 @@
+# INTENT: Сообщает Railpack, что приложение живёт в подпапке glpi-inventory-server
+# и там же находятся файлы сборки/деплоя (Dockerfile, railway.json, nixpacks.toml).
+[build]
+working_directory = "glpi-inventory-server"
+
