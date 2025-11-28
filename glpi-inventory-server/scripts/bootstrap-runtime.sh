@@ -29,7 +29,7 @@ sync_glpi_sources() {
   if [[ ! -d "${GLPI_SRC}" ]]; then
     echo "[bootstrap-runtime] Не найден каталог GLPI по пути ${GLPI_SRC}" >&2
     exit 1
-  }
+  fi
 
   mkdir -p "${GLPI_DEST}"
 
@@ -50,7 +50,7 @@ configure_nginx() {
   if [[ ! -f "${APP_ROOT}/nginx.conf" ]]; then
     echo "[bootstrap-runtime] Не найден nginx.conf в репозитории" >&2
     exit 1
-  }
+  fi
 
   install -d /etc/nginx/conf.d
   cp "${APP_ROOT}/nginx.conf" "${NGINX_CONF_TARGET}"
