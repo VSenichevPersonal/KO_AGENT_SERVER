@@ -1,0 +1,10 @@
+{
+  "_intent": "Railway конфиг: билд через Nixpacks и запуск GLPI контейнера.",
+  "$schema": "https://railway.app/railway.schema.json",
+  "build": {
+    "builder": "NIXPACKS"
+  },
+  "deploy": {
+    "startCommand": "nginx && php-fpm"
+  }
+}

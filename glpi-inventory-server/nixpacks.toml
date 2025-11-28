@@ -1,0 +1,3 @@
+# INTENT: Подсказывает Railway какие nix пакеты нужны для сборки GLPI.
+[phases.build]
+nixPkgs = ['php83', 'nginx', 'mariadb']

@@ -1,0 +1,37 @@
+version: '3.8'
+
+# INTENT: Описывает минимальный стек GLPI для локальной разработки и Railway.
+# RESPONSIBILITIES: Сборка приложения, подъём БД, проброс общих томов.
+# SIDE_EFFECTS: Создаёт именованные тома и локальные контейнеры.
+services:
+  glpi:
+    # INTENT: PHP-FPM + Nginx контейнер, который обслуживает GLPI.
+    # DEPENDS_ON: mariadb - требуется доступ к БД во время установки.
+    build: .
+    ports:
+      - "80:80"
+    environment:
+      - DB_HOST=${DB_HOST:-mariadb}
+      - DB_NAME=${DB_NAME:-glpi}
+      - DB_USER=${DB_USER:-glpi}
+      - DB_PASS=${DB_PASSWORD:?Укажите_DB_PASSWORD_в_.env}
+    depends_on:
+      - mariadb
+    volumes:
+      - glpi_data:/var/www/html/glpi
+
+  mariadb:
+    # INTENT: Персистентная БД для GLPI.
+    image: mariadb:10.11
+    environment:
+      - MYSQL_ROOT_PASSWORD=${ROOT_PASSWORD:?Укажите_ROOT_PASSWORD_в_.env}
+      - MYSQL_DATABASE=${DB_NAME:-glpi}
+      - MYSQL_USER=${DB_USER:-glpi}
+      - MYSQL_PASSWORD=${DB_PASSWORD:?Укажите_DB_PASSWORD_в_.env}
+    volumes:
+      - db_data:/var/lib/mysql
+
+volumes:
+  # INTENT: Отдельные тома для данных GLPI и MariaDB.
+  glpi_data:
+  db_data:
